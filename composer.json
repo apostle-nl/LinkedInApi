@@ -6,9 +6,8 @@
     "authors":[
         {
             "name":"Niels van Hove",
-            "email":"nielsz.spam@gmail.com",
-            "role":"Developer"
-        },
+            "email":"nielsz.spam@gmail.com"
+        }
     ],
 
     "autoload":{
