@@ -1,0 +1,23 @@
+{
+    "name":"Nielsz/LinkedInApi",
+    "description":"Small wrapper to connect with LinkedIn Api",
+    "license":"MIT",
+    "homepage":"https://github.com/nielsz/LinkedInApi",
+    "authors":[
+        {
+            "name":"Niels van Hove",
+            "email":"nielsz.spam@gmail.com",
+            "role":"Developer"
+        },
+    ],
+
+    "autoload":{
+        "psr-0":{
+            "Nielsz\\LinkedInApi":"src/"
+        }
+    },
+    "target-dir":"",
+    "require":{
+        "php":">=5.3.0"
+    }
+}
