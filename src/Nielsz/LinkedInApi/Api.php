@@ -56,17 +56,44 @@ class Api {
         return $url;
     }
 
+    public function getMyProfile() {
+        $userId = "~";
+        return $this->getProfile($userId);
+    }
+
+    public function getProfile($id) {
+        $fields = array();
+        $fields[] = 'id';
+        $fields[] = 'first-name';
+        $fields[] = 'last-name';
+        $fields[] = 'headline';
+        $fields[] = 'picture-url';
+        $fields[] = 'num-connections';
+        $fields[] = 'num-connections-capped';
+        $fields[] = 'summary';
+        $fields[] = 'specialties';
+        $fields[] = 'public-profile-url';
+
+        $fields = implode(",",$fields);
+        $url = "https://api.linkedin.com/v1/people/".$id.":(".$fields.")";
+
+        $response = $this->doGet($url);
+        return $response;
+    }
+
     public function postShare($data) {
         //http://api.linkedin.com/v1/people/~/shares
         $url = "https://api.linkedin.com/v1/people/~/shares";
 
         unset($data['action']);
         $data = json_encode($data);
-        var_dump($data);
         return $this->doPost($url, $data);
     }
 
     private function doGet($url) {
+        if($this->accessToken) {
+            $url.="?oauth2_access_token=" . $this->accessToken;
+        }
         $curl = curl_init($url); 
         curl_setopt($curl, CURLOPT_FAILONERROR, true); 
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
