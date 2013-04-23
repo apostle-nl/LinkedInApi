@@ -84,8 +84,6 @@ class Api {
     public function postShare($data) {
         //http://api.linkedin.com/v1/people/~/shares
         $url = "https://api.linkedin.com/v1/people/~/shares";
-
-        unset($data['action']);
         $data = json_encode($data);
         return $this->doPost($url, $data);
     }
@@ -101,6 +99,7 @@ class Api {
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); 
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);   
         curl_setopt($curl,CURLOPT_HTTPHEADER,array('x-li-format: json'));
+
         $responseText = curl_exec($curl); 
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $response = new Response();
@@ -113,7 +112,6 @@ class Api {
     private function doPost($url, $data) {
 
         $url.="?oauth2_access_token=" . $this->accessToken;
-        echo $url;
 
         $curl = curl_init($url); 
         curl_setopt($curl, CURLOPT_FAILONERROR, true); 
@@ -127,8 +125,20 @@ class Api {
 
         $responseText = curl_exec($curl); 
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        var_dump($httpStatus);
-        var_dump($responseText);
+        $response = new Response();
+        $response->httpStatus = $httpStatus;
+        $response->success = in_array($httpStatus, array(200,201,204));
+        if($response->success) {
+            $response->data = json_decode($responseText);
+        } else {
+            if($resonse->responseText) {
+                $response->data = $response->responseText;
+            } else {
+                $response->data = "Error " . $httpStatus;
+            }
+        }
+        return $response;
+
     }
 }
 
