@@ -1,8 +1,8 @@
 {
-    "name":"nielsz/linkedinapi",
+    "name":"apostle-nl/linkedinapi",
     "description":"Small wrapper to connect with LinkedIn Api",
     "license":"MIT",
-    "homepage":"https://github.com/nielsz/LinkedInApi",
+    "homepage":"https://github.com/apostle-nl/LinkedInApi",
     "authors":[
         {
             "name":"Niels van Hove",
@@ -12,7 +12,7 @@
 
     "autoload":{
         "psr-0":{
-            "Nielsz\\LinkedInApi":"src/"
+            "Apostle-nl\\LinkedInApi":"src/"
         }
     },
     "target-dir":"",
