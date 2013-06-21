@@ -96,8 +96,12 @@ class Api {
 
     private function doGet($url) {
         if($this->accessToken) {
-            $url.="?oauth2_access_token=" . $this->accessToken;
+            if(strpos($url, "?") === false) 
+                $url.="?oauth2_access_token=" . $this->accessToken;
+            else 
+                $url.="&oauth2_access_token=" . $this->accessToken;
         }
+
         $curl = curl_init($url); 
         curl_setopt($curl, CURLOPT_FAILONERROR, true); 
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
@@ -116,8 +120,12 @@ class Api {
     }
 
     private function doPost($url, $data) {
-
-        $url.="?oauth2_access_token=" . $this->accessToken;
+        if($this->accessToken) {
+            if(strpos($url, "?") === false) 
+                $url.="?oauth2_access_token=" . $this->accessToken;
+            else 
+                $url.="&oauth2_access_token=" . $this->accessToken;
+        }
 
         $curl = curl_init($url); 
         curl_setopt($curl, CURLOPT_FAILONERROR, true); 
