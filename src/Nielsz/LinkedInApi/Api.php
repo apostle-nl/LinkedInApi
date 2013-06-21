@@ -55,6 +55,12 @@ class Api {
         $url = "https://www.linkedin.com/uas/oauth2/accessToken?grant_type=authorization_code&code=".$code."&redirect_uri=" . urlencode($this->redirectUrl)."&client_id=".$this->clientId."&client_secret=" . $this->clientSecret;
         return $url;
     }
+    
+    public function getMyUpdates() {
+        $url = "https://api.linkedin.com/v1/people/~/network/updates?scope=self";
+        $response = $this->doGet($url);
+        return $response;
+    }
 
     public function getMyProfile() {
         $userId = "~";
