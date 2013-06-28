@@ -56,6 +56,18 @@ class Api {
         return $url;
     }
     
+    public function getMyConnections($onlyCount = true) {
+        // if we're only counting, dont get all info, get as little as needed., the data->_total will have the count.
+        if($onlyCount == true) {
+            $url = "https://api.linkedin.com/v1/people/~/connections?count=1";
+        } else {
+            $url = "https://api.linkedin.com/v1/people/~/connections";
+        }
+        
+        $response = $this->doGet($url);
+        return $response;
+    }    
+    
     public function getMyUpdates() {
         $url = "https://api.linkedin.com/v1/people/~/network/updates?type=SHAR&scope=self";
         $response = $this->doGet($url);
