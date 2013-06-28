@@ -57,7 +57,7 @@ class Api {
     }
     
     public function getMyUpdates() {
-        $url = "https://api.linkedin.com/v1/people/~/network/updates?scope=self";
+        $url = "https://api.linkedin.com/v1/people/~/network/updates?type=SHAR&scope=self";
         $response = $this->doGet($url);
         return $response;
     }
