@@ -56,6 +56,12 @@ class Api {
         return $url;
     }
     
+    public function getCommentsAndLikes($updateKey) {
+        $url = "https://api.linkedin.com/v1/people/~/network/updates/key=".$updateKey."/";
+        $response = $this->doGet($url);
+        return $response;
+    }    
+    
     public function getMyConnections($onlyCount = true) {
         // if we're only counting, dont get all info, get as little as needed., the data->_total will have the count.
         if($onlyCount == true) {
