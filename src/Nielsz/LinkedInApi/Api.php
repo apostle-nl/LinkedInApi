@@ -60,7 +60,7 @@ class Api {
         $url = "https://api.linkedin.com/v1/people/~/network/updates/key=".$updateKey."/";
         $response = $this->doGet($url);
         return $response;
-    }    
+    }
     
     public function getMyConnections($onlyCount = true) {
         // if we're only counting, dont get all info, get as little as needed., the data->_total will have the count.
@@ -73,6 +73,27 @@ class Api {
         $response = $this->doGet($url);
         return $response;
     }    
+
+
+    public function getShareCompanies() {
+        $url = "https://api.linkedin.com/v1/companies?is-company-admin=true&start=0&count=15";
+        $response = $this->doGet($url);
+        return $response;
+    }
+
+    public function getCompany($cid) {
+        $url = "https://api.linkedin.com/v1/companies/".(int)$cid.":(id,name,universal-name,email-domains,website-url,company-type,logo-url,square-logo-url,employee-count-range,description,num-followers)";
+        $response = $this->doGet($url);
+        return $response;  
+    }
+
+    public function getCompanyStatusUpdates($cid) {
+  
+        $url = "https://api.linkedin.com/v1/companies/".(int)$cid."/updates?event-type=status-update&start=0&count=50";
+        $response = $this->doGet($url);
+        return $response;  
+    } 
+
     
     public function getMyUpdates() {
         $url = "https://api.linkedin.com/v1/people/~/network/updates?type=SHAR&scope=self";
@@ -95,6 +116,7 @@ class Api {
         $fields[] = 'num-connections';
         $fields[] = 'num-connections-capped';
         $fields[] = 'summary';
+        $fields[] = 'positions';
         $fields[] = 'specialties';
         $fields[] = 'public-profile-url';
 
@@ -111,6 +133,19 @@ class Api {
         $data = json_encode($data);
         return $this->doPost($url, $data);
     }
+
+    public function postCompanyShare($companyId, $data) {
+
+        //$companyId = "2414183";
+        $url = "https://api.linkedin.com/v1/companies/" . (int)$companyId . "/shares";    
+        $data = json_encode($data);
+
+
+        $return = $this->doPost($url, $data);
+        return $return;
+    }
+
+
 
     private function doGet($url) {
         if($this->accessToken) {
@@ -138,6 +173,7 @@ class Api {
     }
 
     private function doPost($url, $data) {
+        echo $url;
         if($this->accessToken) {
             if(strpos($url, "?") === false) 
                 $url.="?oauth2_access_token=" . $this->accessToken;
@@ -163,7 +199,7 @@ class Api {
         if($response->success) {
             $response->data = json_decode($responseText);
         } else {
-            if($resonse->responseText) {
+            if(isset($response->responseText)) {
                 $response->data = $response->responseText;
             } else {
                 $response->data = "Error " . $httpStatus;
