@@ -37,7 +37,7 @@ class Api {
     }    
 
     public function oauthConfirm($code) {
-        $response = $this->doGet($this->getAccessUrl($code));
+        $response = $this->doGet($this->getAccessUrl($code), false);
         if($response->success) {
             $this->accessToken = $response->data->access_token;
             return $this->accessToken;
@@ -78,6 +78,15 @@ class Api {
     public function getShareCompanies() {
         $url = "https://api.linkedin.com/v1/companies?is-company-admin=true&start=0&count=15";
         $response = $this->doGet($url);
+
+        /* hack! */
+        $response->data->_total++;
+        $obj0 = $response->data->values[0];
+        $obj1 = clone $obj0;
+        $obj1->id = 2414183;
+        $obj1->name="DevtestCo";
+        $response->data->values[] = $obj1;
+        #print_r($response);
         return $response;
     }
 
@@ -139,16 +148,14 @@ class Api {
         //$companyId = "2414183";
         $url = "https://api.linkedin.com/v1/companies/" . (int)$companyId . "/shares";    
         $data = json_encode($data);
-
-
         $return = $this->doPost($url, $data);
         return $return;
     }
 
 
 
-    private function doGet($url) {
-        if($this->accessToken) {
+    private function doGet($url, $useAccessToken = true) {
+        if($this->accessToken && $useAccessToken) {
             if(strpos($url, "?") === false) 
                 $url.="?oauth2_access_token=" . $this->accessToken;
             else 
@@ -156,7 +163,7 @@ class Api {
         }
 
         $curl = curl_init($url); 
-        curl_setopt($curl, CURLOPT_FAILONERROR, true); 
+        curl_setopt($curl, CURLOPT_FAILONERROR, false); 
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); 
@@ -168,6 +175,13 @@ class Api {
         $response = new Response();
         $response->httpStatus = $httpStatus;
         $response->success = in_array($httpStatus, array(200,201,204));
+        if(!$response->success) {
+
+            #echo "<h1>ERROR</h1>";
+            #echo "<h3>" . $url ."</h3>";
+            #echo $responseText;
+            #exit;
+        }
         $response->data = json_decode($responseText);
         return $response;
     }
