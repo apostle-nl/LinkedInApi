@@ -128,6 +128,7 @@ class Api {
         $fields[] = 'positions';
         $fields[] = 'specialties';
         $fields[] = 'public-profile-url';
+        $fields[] = 'email-address';
 
         $fields = implode(",",$fields);
         $url = "https://api.linkedin.com/v1/people/".$id.":(".$fields.")";
